@@ -8,6 +8,7 @@ def predict_churn():
     """
     # Load the dataset
     dataset = Load_Dataset(c.PATH).load_data()
+    print(dataset)
 
     # Preprocess the data
     X_train, Y_train, X_test, Y_test = Preprocess_Data(dataset).prepro()
