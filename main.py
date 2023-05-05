@@ -10,10 +10,11 @@ def predict_churn():
     df = PreprocessData(c.PATH).create_dataset()
 
     # Train the model
-    # model = Train_Model(X_train, Y_train).train()
-    #
-    # # get accuracy
-    # accuracy = Evaluate_Model(model, X_test, Y_test).eval
+    model = Classifier(df, c.save_path)
+    model.train()
+    model.save_model()
+    # Test the model
+    model.test()
 
     Plot_Results().plot()
 

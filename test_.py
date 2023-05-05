@@ -1,4 +1,5 @@
 import unittest
+import os
 from utils import *
 import Config as c
 
@@ -6,18 +7,24 @@ import Config as c
 class TestChurnPrediction(unittest.TestCase):
 
     def setUp(self):
+        df = PreprocessData(c.PATH).create_dataset()
+        self.model = Classifier(df, c.save_path)
+
         match self._testMethodName:
             case 'test_create_dataset' :
-                self.test_message = "1- Dataset created correctly"
+                self.test_message = " >>>>> Dataset created correctly"
 
-            case 'test_model_training':
-                self.test_message = "3- model training correctly"
+            case 'test_train':
+                self.test_message = " >>>>> model training and load both correct"
 
-            case 'test_model_evaluation':
-                self.test_message = "4- model is evaluating correctly"
+            case 'test_save_model':
+                self.test_message = " >>>>> model saved correctly"
+
+            case 'test_test':
+                self.test_message = " >>>>> model accuracy greater than 75%"
 
             case 'test_model_visualization':
-                self.test_message = "5- resulats plot correctly"
+                self.test_message = " >>>>> Results plot correctly"
 
             case _:
                 self.test_message ="Invalid test case"
@@ -37,14 +44,23 @@ class TestChurnPrediction(unittest.TestCase):
         # Check if there are no empty values
         self.assertFalse(df.isin(['', ' ']).any().any())
 
+    def test_train(self):
+        self.model.train()
+        loaded_model = self.model.load_model()
+        self.assertTrue(isinstance(loaded_model, LogisticRegression))
 
-    def test_model_training(self):
-        # Check if the model is training correctly
-        pass
+    def test_save_model(self):
+        self.model.train()
+        self.model.save_model()
+        self.assertTrue(os.path.exists(c.save_path))
 
-    def test_model_evaluation(self):
-        # Check if the model is evaluating correctly
-        pass
+    def test_accuracy(self):
+        """
+        Test the model on the test set and check if accuracy is greater than 0.75
+        """
+        self.model.train()
+        accuracy = self.model.test()
+        self.assertTrue(accuracy > 0.75, f"Test accuracy ({accuracy}) is not greater than 75%")
 
     def test_model_visualization(self):
         # # Check if the resulats plot correctly

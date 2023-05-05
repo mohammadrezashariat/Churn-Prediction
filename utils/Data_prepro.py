@@ -31,6 +31,7 @@ class PreprocessData:
         """
         read csv file as pandas dataframe
         """
+        print("Reading csv file")
         self.df = pd.read_csv(self.path)
 
     def __data_cleaning(self):
@@ -39,6 +40,7 @@ class PreprocessData:
         replacing values, and filling null values with the mean of the column.
         """
         # Drop the 'customerID' column
+        print("Cleaning data")
         self.df = self.df.drop(columns=['customerID'])
 
         # Convert the 'TotalCharges' column to numeric data type, and coerce any errors
@@ -54,14 +56,14 @@ class PreprocessData:
 
     def __feature_engineering(self):
         """
-        Engineer new features based on existing features.
-
         Features Engineered:
-        - tenure_range: the range of the customer's tenure in years (0-1, 1-2, 2-3, 3-4, 4-5, more than 5).
+        - tenure_range: the range of the customer's tenure in
+        years (0-1, 1-2, 2-3, 3-4, 4-5, more than 5).
 
         Returns:
             None
         """
+        print("Feature Engineering")
         # Create conditions for each tenure range
         condition = [((self.df.tenure >= 0) & (self.df.tenure <= 12)),
                      ((self.df.tenure > 12) & (self.df.tenure <= 24)),
@@ -82,6 +84,7 @@ class PreprocessData:
         Apply feature scaling to the 'MonthlyCharges' and 'TotalCharges' columns of the dataset
         by taking the natural logarithm of each value plus 1 to prevent negative values.
         """
+        print("Feature Scaling")
         self.df['MonthlyCharges'] = np.log1p(self.df['MonthlyCharges'])
         self.df['TotalCharges'] = np.log1p(self.df['TotalCharges'])
 
@@ -91,6 +94,7 @@ class PreprocessData:
         This method performs one-hot encoding on the categorical features of the dataset and drops the original
         categorical columns. It also converts the target variable `Churn` into binary format.
         """
+        print("Encoding Features")
         # List of categorical columns
         cat_cols = ['gender', 'InternetService', 'PaymentMethod', 'Partner', 'Dependents', 'PhoneService',
                     'PaperlessBilling', 'MultipleLines', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection',
@@ -122,5 +126,6 @@ class PreprocessData:
         self.__encoding_categorical_features()
         self.__feature_engineering()
         self.__feature_scaling()
+        print("-- Dataset is ready!")
 
         return self.df
