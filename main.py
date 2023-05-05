@@ -16,7 +16,7 @@ def predict_churn():
     # Test the model
     model.test()
 
-    Plot_Results().plot()
+    model.plot_performance()
 
 
 if __name__ == '__main__':

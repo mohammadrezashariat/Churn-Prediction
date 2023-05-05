@@ -11,7 +11,7 @@ class TestChurnPrediction(unittest.TestCase):
         self.model = Classifier(df, c.save_path)
 
         match self._testMethodName:
-            case 'test_create_dataset' :
+            case 'test_create_dataset':
                 self.test_message = " >>>>> Dataset created correctly"
 
             case 'test_train':
@@ -27,7 +27,7 @@ class TestChurnPrediction(unittest.TestCase):
                 self.test_message = " >>>>> Results plot correctly"
 
             case _:
-                self.test_message ="Invalid test case"
+                self.test_message = "Invalid test case"
 
     def test_create_dataset(self):
         df = PreprocessData(c.PATH).create_dataset()
@@ -63,14 +63,11 @@ class TestChurnPrediction(unittest.TestCase):
         self.assertTrue(accuracy > 0.75, f"Test accuracy ({accuracy}) is not greater than 75%")
 
     def test_model_visualization(self):
-        # # Check if the resulats plot correctly
-        pass
+        self.assertTrue(os.path.exists(c.fig_path))
 
     def tearDown(self):
         print(self.test_message)
 
 
-
 if __name__ == '__main__':
     unittest.main()
-

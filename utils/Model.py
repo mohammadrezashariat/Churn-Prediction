@@ -1,9 +1,15 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.metrics import roc_curve
+from sklearn.metrics import RocCurveDisplay
+import matplotlib.pyplot as plt
+import matplotlib
 import joblib
 import Config as c
-
+matplotlib.use('Agg')
 
 class Classifier:
     """
@@ -105,3 +111,38 @@ class Classifier:
         print(f"Accuracy on test set: {accuracy}")
 
         return accuracy
+
+    def plot_performance(self):
+        """
+        Plot the confusion matrix and ROC curve of the trained model's performance on the test set, and save the figure as
+        `model/performance.png`.
+        """
+
+        # Make predictions on the test set
+        y_predict = self.model.predict(self.X_test)
+
+        # Compute the confusion matrix
+        cm = confusion_matrix(self.Y_test, y_predict)
+
+        # Compute the ROC curve
+        y_score = self.model.decision_function(self.X_test)
+        fpr, tpr, _ = roc_curve(self.Y_test, y_score)
+
+        # Create a figure with two subplots
+        fig, ax = plt.subplots(1, 2, figsize=(12, 5))
+
+        # Plot the confusion matrix on the first subplot
+        display = ConfusionMatrixDisplay(confusion_matrix=cm)
+        display.plot(ax=ax[0])
+        ax[0].set_title('Confusion Matrix')
+
+        # Plot the ROC curve on the second subplot
+        roc_display = RocCurveDisplay(fpr=fpr, tpr=tpr)
+        roc_display.plot(ax=ax[1])
+        ax[1].set_title('ROC Curve')
+
+        # Display the plot
+        plt.show()
+
+        # Save the figure
+        plt.savefig(c.fig_path, bbox_inches='tight')
