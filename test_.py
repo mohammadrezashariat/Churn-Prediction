@@ -7,11 +7,8 @@ class TestChurnPrediction(unittest.TestCase):
 
     def setUp(self):
         match self._testMethodName:
-            case 'test_data_loaded':
-                self.test_message = "1- Dataset has been loaded correctly"
-
-            case 'test_data_preprocessing' :
-                self.test_message = "2- Data Preprocessing step is working correctly"
+            case 'test_create_dataset' :
+                self.test_message = "1- Dataset created correctly"
 
             case 'test_model_training':
                 self.test_message = "3- model training correctly"
@@ -25,14 +22,21 @@ class TestChurnPrediction(unittest.TestCase):
             case _:
                 self.test_message ="Invalid test case"
 
-    def test_data_loaded(self):
-        # Check if the dataset has been loaded correctly
-        dataset = Load_Dataset(c.PATH).load_data()
-        self.assertIsNotNone(dataset)
+    def test_create_dataset(self):
+        df = PreprocessData(c.PATH).create_dataset()
+        # Check dataset shape
+        self.assertEqual(df.shape, (7043, 42))
+        # Check if all columns are numeric of boolean
+        expected = [np.dtype('int64'), np.dtype('bool'), np.dtype('float64'), np.dtype('int32')]
+        unique_types = list(set(df.dtypes))
+        self.assertEqual(sorted(unique_types), sorted(expected))
 
-    def test_data_preprocessing(self):
-        # Check if the data preprocessing step is working correctly
-        pass
+        # Check if there are no NaN values
+        self.assertFalse(df.isna().any().any())
+
+        # Check if there are no empty values
+        self.assertFalse(df.isin(['', ' ']).any().any())
+
 
     def test_model_training(self):
         # Check if the model is training correctly
