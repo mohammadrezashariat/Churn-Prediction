@@ -9,8 +9,8 @@ Build a binary classification model to predict whether a customer will churn (i.
 Clone the repository and install the required packages using pip:
 
 ```
-git clone https://github.com/mohammadrezashariat/Rayankar
-cd Rayankar
+git clone https://github.com/mohammadrezashariat/Churn-Prediction
+cd Churn-Prediction
 pip install -r requirements.txt
 ```
 
